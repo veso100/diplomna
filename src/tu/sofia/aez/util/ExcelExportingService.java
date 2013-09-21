@@ -19,8 +19,7 @@ public class ExcelExportingService {
 	private final String filename;
 	private final Workbook wb;
 
-	public ExcelExportingService(String name) throws InvalidFormatException,
-			IOException, FileAlreadyExistsException {
+	public ExcelExportingService(String name) throws InvalidFormatException, IOException, FileAlreadyExistsException {
 		this.filename = "d:\\" + name + ".xlsx";
 		File ff = new File(filename);
 		if (ff.exists())

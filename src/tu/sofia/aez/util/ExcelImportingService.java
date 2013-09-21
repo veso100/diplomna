@@ -18,8 +18,7 @@ import tu.sofia.aez.om.Dvigatel;
 public class ExcelImportingService {
 	private final Workbook wb;
 
-	public ExcelImportingService(String filename)
-			throws InvalidFormatException, IOException {
+	public ExcelImportingService(String filename) throws InvalidFormatException, IOException {
 		wb = WorkbookFactory.create(new File(filename));
 	}
 
