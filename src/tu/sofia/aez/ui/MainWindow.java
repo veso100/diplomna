@@ -23,7 +23,7 @@ public class MainWindow {
 		DataSetService dataSetService = new DataSetService();
 		panel.add(new ChartingService().prepareChartPanel(dataSetService.createSampleDataset()), "wrap");
 		title.setFont(new Font("Arial", Font.PLAIN, 24));
-
+		panel.add(new UIDvigatel().getReadOnlyPanel(),"wrap");
 		frame.add(panel);
 		frame.setResizable(false);
 		frame.setSize(UIConstants.WINDOW_WIDTH, UIConstants.WINDOW_HEIGHT);
