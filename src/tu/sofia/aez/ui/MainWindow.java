@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import tu.sofia.aez.util.ChartingService;
 import net.miginfocom.swing.MigLayout;
 
 public class MainWindow {
@@ -19,6 +20,7 @@ public class MainWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel.setLayout(new MigLayout("center"));
 		panel.add(title,"wrap");
+		panel.add(new ChartingService().prepareChartPanel(),"wrap");
 		title.setFont(new Font("Arial",Font.PLAIN,24));
 
 		frame.add(panel);
