@@ -25,7 +25,19 @@ public class Dvigatel {
 	}
 
 	public Dvigatel(double[] values) {
-
+		pN=values[0];
+		U1n=values[1];
+		U2n=values[2];
+		Io=values[3];
+		ImN=values[4];
+		Nn=values[5];
+		No=values[6];
+		X2=values[7];
+		R1=values[8];
+		R2=values[9];
+		Wn=values[10];
+		Wo=values[11];
+		Ipn=values[12];
 	}
 
 	public double getIpn() {

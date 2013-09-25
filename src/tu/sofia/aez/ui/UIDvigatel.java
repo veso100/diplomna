@@ -14,7 +14,7 @@ import tu.sofia.aez.om.Dvigatel;
 public class UIDvigatel {
 
 	public static final int INPUT_COLUMNS = 7;
-	private final Dvigatel dvigatel;
+	private Dvigatel dvigatel;
 
 	private JPanel resultPanel = new JPanel();
 	private JTextField pNTextField = new JTextField(INPUT_COLUMNS);
@@ -180,6 +180,14 @@ public class UIDvigatel {
 			editSaveButton.removeActionListener(editAction);
 			editSaveButton.addActionListener(saveAction);
 		}
+	}
+
+	public Dvigatel getDvigatel() {
+		return dvigatel;
+	}
+
+	public void setDvigatel(Dvigatel dvigatel) {
+		this.dvigatel = dvigatel;
 	}
 
 }
