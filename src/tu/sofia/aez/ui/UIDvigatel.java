@@ -1,5 +1,8 @@
 package tu.sofia.aez.ui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,12 +10,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import tu.sofia.aez.om.Dvigatel;
 
 public class UIDvigatel {
 
+	private static final String EDIT_TEXT = "Редактирай";
+	private static final String SAVE_TEXT = "Задай този двигател";
 	public static final int INPUT_COLUMNS = 7;
 	private Dvigatel dvigatel;
 
@@ -30,7 +36,7 @@ public class UIDvigatel {
 	private JTextField WnTextField = new JTextField(INPUT_COLUMNS);
 	private JTextField WoTextField = new JTextField(INPUT_COLUMNS);
 	private JTextField IpnTextField = new JTextField(INPUT_COLUMNS);
-	private JButton editSaveButton = new JButton();
+
 	private JLabel pNLabel = new JLabel("Номинална мощност");
 	private JLabel U1nLabel = new JLabel("Номинално напрежение на статора");
 	private JLabel U2nLabel = new JLabel("Номинално напрежение на ротора");
@@ -44,71 +50,137 @@ public class UIDvigatel {
 	private JLabel WnLabel = new JLabel("Номинална ъглова скорост");
 	private JLabel WoLabel = new JLabel("Синхронна ъглова скорост");
 	private JLabel IpnLabel = new JLabel("Ипн");
+
+	private JButton selectFromLibrary = new JButton();
+	private JButton editSaveButton = new JButton();
+	private JButton calculateButton;
 	private SaveButtonActionListener saveAction = new SaveButtonActionListener();
 	private EditButtonActionListener editAction = new EditButtonActionListener();
+
+	public UIDvigatel(Dvigatel dvg, JButton calculateButton) {
+		this.dvigatel = dvg;
+		this.calculateButton = calculateButton;
+	}
+
+	public UIDvigatel(JButton calculateButton) {
+		dvigatel = new Dvigatel();
+		this.calculateButton = calculateButton;
+	}
 
 	public UIDvigatel(Dvigatel dvg) {
 		this.dvigatel = dvg;
 	}
 
-	public UIDvigatel() {
-		dvigatel = new Dvigatel();
-	}
-
 	public JPanel getReadOnlyPanel() {
-		return getEditPanel(false);
+		return getPanel(false);
 	}
 
 	public JPanel getEditPanel() {
-		return getEditPanel(true);
+		return getPanel(true);
 	}
 
-	public JPanel getEditPanel(boolean editable) {
+	public JPanel getPanel(boolean editable) {
+		return getPanel(editable, false);
+	}
+
+	public JPanel getPanel(boolean editable, boolean simple) {
 
 		resultPanel.setLayout(new MigLayout("center"));
-		JLabel title = new JLabel("Технически унивеситет - София");
-		resultPanel.add(title, "span,align center, wrap");
+
+		if (!simple)
+			resultPanel.setPreferredSize(new Dimension(UIConstants.PANEL_WIDTH, 220));
+		else
+			resultPanel.setPreferredSize(new Dimension(700, 220));
+
+		resultPanel.setBorder(new LineBorder(Color.blue));
+		if (!simple) {
+			JLabel title = new JLabel("Изберете двигател: ");
+			title.setFont(new Font("Arial", Font.PLAIN, 18));
+			resultPanel.add(title, "span, wrap, gapx 20");
+		}
 		fromDvigatel();
 		setEditable(editable);
-		resultPanel.add(pNLabel, "gapy 20");
-		resultPanel.add(pNTextField);
-		resultPanel.add(U1nLabel);
-		resultPanel.add(U1nTextField);
-		resultPanel.add(U2nLabel);
-		resultPanel.add(U2nTextField, "wrap");
+		if (!simple) {
+			resultPanel.add(pNLabel, "gapy 20");
+			resultPanel.add(pNTextField);
+			resultPanel.add(U1nLabel);
+			resultPanel.add(U1nTextField);
+			resultPanel.add(U2nLabel);
+			resultPanel.add(U2nTextField, "wrap");
 
-		resultPanel.add(IoLabel);
-		resultPanel.add(IoTextField);
-		resultPanel.add(ImNLabel);
-		resultPanel.add(ImNTextField);
-		resultPanel.add(NnLabel);
-		resultPanel.add(NnTextField, "wrap");
+			resultPanel.add(IoLabel);
+			resultPanel.add(IoTextField);
+			resultPanel.add(ImNLabel);
+			resultPanel.add(ImNTextField);
+			resultPanel.add(NnLabel);
+			resultPanel.add(NnTextField, "wrap");
 
-		resultPanel.add(NoLabel);
-		resultPanel.add(NoTextField);
-		resultPanel.add(X2Label);
-		resultPanel.add(X2TextField);
-		resultPanel.add(R1Label);
-		resultPanel.add(R1TextField, "wrap");
+			resultPanel.add(NoLabel);
+			resultPanel.add(NoTextField);
+			resultPanel.add(X2Label);
+			resultPanel.add(X2TextField);
+			resultPanel.add(R1Label);
+			resultPanel.add(R1TextField, "wrap");
 
-		resultPanel.add(R2Label);
-		resultPanel.add(R2TextField);
-		resultPanel.add(WnLabel);
-		resultPanel.add(WnTextField);
-		resultPanel.add(WoLabel);
-		resultPanel.add(WoTextField, "wrap");
+			resultPanel.add(R2Label);
+			resultPanel.add(R2TextField);
+			resultPanel.add(WnLabel);
+			resultPanel.add(WnTextField);
+			resultPanel.add(WoLabel);
+			resultPanel.add(WoTextField, "wrap");
 
-		resultPanel.add(IpnLabel);
-		resultPanel.add(IpnTextField, "wrap");
+			resultPanel.add(IpnLabel);
+			resultPanel.add(IpnTextField, "wrap");
+			if (editable) {
+				editSaveButton.setText(SAVE_TEXT);
 
-		if (editable) {
-			editSaveButton.setText("Save");
-			resultPanel.add(editSaveButton, "span,align center");
-			editSaveButton.addActionListener(saveAction);
-		} else {
-			editSaveButton.setText("Edit");
-			resultPanel.add(editSaveButton, "span,align center");
-			editSaveButton.addActionListener(editAction);
+				editSaveButton.addActionListener(saveAction);
+			} else {
+				editSaveButton.setText(EDIT_TEXT);
+				editSaveButton.addActionListener(editAction);
+			}
+			JPanel buttonBar = new JPanel(new MigLayout());
+			selectFromLibrary.setActionCommand("openLibrary");
+			selectFromLibrary.addActionListener(new SelectFromLibraryActionListener());
+			selectFromLibrary.setText("Изберете от библиотеката");
+			selectFromLibrary.setPreferredSize(new Dimension(200, 20));
+			editSaveButton.setPreferredSize(new Dimension(200, 20));
+			buttonBar.add(editSaveButton);
+			buttonBar.add(selectFromLibrary);
+			resultPanel.add(buttonBar, "span,align center");
+		}else{
+			resultPanel.add(pNLabel, "gapy 20");
+			resultPanel.add(pNTextField);
+			resultPanel.add(U1nLabel);
+			resultPanel.add(U1nTextField, "wrap");
+			
+			resultPanel.add(U2nLabel);
+			resultPanel.add(U2nTextField);
+			resultPanel.add(IoLabel);
+			resultPanel.add(IoTextField, "wrap");
+			
+			resultPanel.add(ImNLabel);
+			resultPanel.add(ImNTextField);
+			resultPanel.add(NnLabel);
+			resultPanel.add(NnTextField, "wrap");
+
+			resultPanel.add(NoLabel);
+			resultPanel.add(NoTextField);
+			resultPanel.add(X2Label);
+			resultPanel.add(X2TextField, "wrap");
+			
+			resultPanel.add(R1Label);
+			resultPanel.add(R1TextField);
+			resultPanel.add(R2Label);
+			resultPanel.add(R2TextField, "wrap");
+			
+			resultPanel.add(WnLabel);
+			resultPanel.add(WnTextField);
+			resultPanel.add(WoLabel);
+			resultPanel.add(WoTextField, "wrap");
+
+			resultPanel.add(IpnLabel);
+			resultPanel.add(IpnTextField, "wrap");
 		}
 		return resultPanel;
 	}
@@ -165,7 +237,8 @@ public class UIDvigatel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setEditable(false);
-			editSaveButton.setText("Edit");
+			editSaveButton.setText(EDIT_TEXT);
+			calculateButton.setEnabled(true);
 			toDvigatel();
 			editSaveButton.removeActionListener(saveAction);
 			editSaveButton.addActionListener(editAction);
@@ -176,9 +249,20 @@ public class UIDvigatel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setEditable(true);
-			editSaveButton.setText("Save");
+			editSaveButton.setText(SAVE_TEXT);
 			editSaveButton.removeActionListener(editAction);
+			calculateButton.setEnabled(false);
 			editSaveButton.addActionListener(saveAction);
+		}
+	}
+
+	class SelectFromLibraryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			editSaveButton.setEnabled(false);
+			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(editSaveButton);
+			libraryWindow.setVisible(true);
+			libraryWindow.setAlwaysOnTop(true);
 		}
 	}
 

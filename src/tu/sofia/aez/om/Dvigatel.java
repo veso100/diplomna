@@ -16,7 +16,8 @@ public class Dvigatel {
 	private double Wn; // nominalna aglova skorost
 	private double Wo; // sinhronna aglova skorost
 	private double Ipn; //
-
+	
+	private String name;
 	private double Rd;
 	private double Rsh;
 
@@ -24,6 +25,22 @@ public class Dvigatel {
 		super();
 	}
 
+	public Dvigatel(double[] values, String name) {
+		pN=values[0];
+		U1n=values[1];
+		U2n=values[2];
+		Io=values[3];
+		ImN=values[4];
+		Nn=values[5];
+		No=values[6];
+		X2=values[7];
+		R1=values[8];
+		R2=values[9];
+		Wn=values[10];
+		Wo=values[11];
+		Ipn=values[12];
+		this.name=name;
+	}
 	public Dvigatel(double[] values) {
 		pN=values[0];
 		U1n=values[1];
@@ -38,6 +55,14 @@ public class Dvigatel {
 		Wn=values[10];
 		Wo=values[11];
 		Ipn=values[12];
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public double getIpn() {

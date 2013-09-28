@@ -1,22 +1,21 @@
 package tu.sofia.aez.ui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.border.LineBorder;
 
-import tu.sofia.aez.om.CondenzatornoSpirane;
-import tu.sofia.aez.om.DS;
-import tu.sofia.aez.om.DSVarianti;
-import tu.sofia.aez.om.RDSPOT;
-import tu.sofia.aez.om.RDSPOTVarianti;
-import tu.sofia.aez.om.RDSS;
 import net.miginfocom.swing.MigLayout;
+import tu.sofia.aez.om.DSVarianti;
+import tu.sofia.aez.om.RDSPOTVarianti;
 
 public class VariantsPanel extends JPanel {
 
@@ -26,6 +25,7 @@ public class VariantsPanel extends JPanel {
 	private static final long serialVersionUID = 8804859679762193880L;
 	private Variants variant;
 
+	private JLabel labelIzbereteVariant=new JLabel("Изберете вариант:");
 	private static final String DSvariant1Radio = "DS Variant 1";
 	private static final String DSvariant2Radio = "DS Variant 2";
 	private static final String DSvariant3Radio = "DS Variant 3";
@@ -67,15 +67,18 @@ public class VariantsPanel extends JPanel {
 	public void refreshPanel() {
 		removeAll();
 		updateUI();
+		this.setPreferredSize(new Dimension(UIConstants.PANEL_WIDTH, 170));
+		this.setBorder(new LineBorder(Color.blue));
 		setLayout(new MigLayout("center"));
-
+		labelIzbereteVariant.setFont(new Font("Arial", Font.PLAIN, 18));
+	    add(labelIzbereteVariant,"pos 30 10");
 		if (Variants.DS.equals(variant) || Variants.RDSS.equals(variant)) {
 
 			add(new JLabel(new ImageIcon(DSVarianti.VARIANT1.getResource())));
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT2.getResource())));
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT3.getResource())));
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT4.getResource())));
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT5.getResource())), "wrap");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT2.getResource())),"gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT3.getResource())),"gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT4.getResource())),"gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT5.getResource())), "wrap, gapx 30");
 
 			dSvariant1Button.addActionListener(dsVariantsChangedListener);
 			dSvariant1Button.setActionCommand(DSvariant1Radio);
@@ -100,10 +103,10 @@ public class VariantsPanel extends JPanel {
 			dSbuttonGroup.add(dSvariant5Button);
 
 			add(dSvariant1Button, "align center");
-			add(dSvariant2Button, "align center");
-			add(dSvariant3Button, "align center");
-			add(dSvariant4Button, "align center");
-			add(dSvariant5Button, "align center");
+			add(dSvariant2Button, "align center, gapx 30");
+			add(dSvariant3Button, "align center, gapx 30");
+			add(dSvariant4Button, "align center, gapx 30");
+			add(dSvariant5Button, "align center, gapx 30");
 
 		}
 
