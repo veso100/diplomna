@@ -22,7 +22,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import tu.sofia.aez.om.Dvigatel;
-import tu.sofia.aez.util.ExcelImportingService;
+import tu.sofia.aez.util.ExcelService;
 
 public class DvigatelLibraryWindow extends JFrame {
 
@@ -103,7 +103,7 @@ public class DvigatelLibraryWindow extends JFrame {
 
 	private void loadDvigatels() {
 		try {
-			ExcelImportingService excelService = new ExcelImportingService("e:\\engines.xlsx");
+			ExcelService excelService = new ExcelService();
 			loadedDvigatels = excelService.loadDvigateli();
 		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block

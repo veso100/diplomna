@@ -17,7 +17,7 @@ public class Dvigatel {
 	private double Wo; // sinhronna aglova skorost
 	private double Ipn; //
 	
-	private String name;
+	private String name="";
 	private double Rd;
 	private double Rsh;
 

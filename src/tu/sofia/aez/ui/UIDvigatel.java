@@ -5,20 +5,26 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import net.miginfocom.swing.MigLayout;
 import tu.sofia.aez.om.Dvigatel;
+import tu.sofia.aez.util.ExcelService;
 
 public class UIDvigatel {
 
 	private static final String EDIT_TEXT = "Редактирай";
-	private static final String SAVE_TEXT = "Задай този двигател";
+	private static final String SAVE_TEXT = "Използвай този двигател";
 	public static final int INPUT_COLUMNS = 7;
 	private Dvigatel dvigatel;
 
@@ -36,6 +42,7 @@ public class UIDvigatel {
 	private JTextField WnTextField = new JTextField(INPUT_COLUMNS);
 	private JTextField WoTextField = new JTextField(INPUT_COLUMNS);
 	private JTextField IpnTextField = new JTextField(INPUT_COLUMNS);
+	private JTextField nameTextField = new JTextField(INPUT_COLUMNS);
 
 	private JLabel pNLabel = new JLabel("Номинална мощност");
 	private JLabel U1nLabel = new JLabel("Номинално напрежение на статора");
@@ -50,8 +57,10 @@ public class UIDvigatel {
 	private JLabel WnLabel = new JLabel("Номинална ъглова скорост");
 	private JLabel WoLabel = new JLabel("Синхронна ъглова скорост");
 	private JLabel IpnLabel = new JLabel("Ипн");
+	private JLabel nameLabel = new JLabel("Име");
 
 	private JButton selectFromLibrary = new JButton();
+	private JButton addToLibrary = new JButton();
 	private JButton editSaveButton = new JButton();
 	private JButton calculateButton;
 	private SaveButtonActionListener saveAction = new SaveButtonActionListener();
@@ -86,7 +95,7 @@ public class UIDvigatel {
 	public JPanel getPanel(boolean editable, boolean simple) {
 
 		resultPanel.setLayout(new MigLayout("center"));
-
+		addTextChangeListeners();
 		if (!simple)
 			resultPanel.setPreferredSize(new Dimension(UIConstants.PANEL_WIDTH, 220));
 		else
@@ -130,7 +139,9 @@ public class UIDvigatel {
 			resultPanel.add(WoTextField, "wrap");
 
 			resultPanel.add(IpnLabel);
-			resultPanel.add(IpnTextField, "wrap");
+			resultPanel.add(IpnTextField);
+			resultPanel.add(nameLabel);
+			resultPanel.add(nameTextField, "wrap");
 			if (editable) {
 				editSaveButton.setText(SAVE_TEXT);
 
@@ -140,6 +151,11 @@ public class UIDvigatel {
 				editSaveButton.addActionListener(editAction);
 			}
 			JPanel buttonBar = new JPanel(new MigLayout());
+			addToLibrary.setActionCommand("addToLibrary");
+			addToLibrary.addActionListener(new AddToLibraryActionListener());
+			addToLibrary.setText("Добави към библиотеката");
+			addToLibrary.setPreferredSize(new Dimension(200, 20));
+
 			selectFromLibrary.setActionCommand("openLibrary");
 			selectFromLibrary.addActionListener(new SelectFromLibraryActionListener());
 			selectFromLibrary.setText("Изберете от библиотеката");
@@ -147,18 +163,19 @@ public class UIDvigatel {
 			editSaveButton.setPreferredSize(new Dimension(200, 20));
 			buttonBar.add(editSaveButton);
 			buttonBar.add(selectFromLibrary);
+			buttonBar.add(addToLibrary);
 			resultPanel.add(buttonBar, "span,align center");
-		}else{
+		} else {
 			resultPanel.add(pNLabel, "gapy 20");
 			resultPanel.add(pNTextField);
 			resultPanel.add(U1nLabel);
 			resultPanel.add(U1nTextField, "wrap");
-			
+
 			resultPanel.add(U2nLabel);
 			resultPanel.add(U2nTextField);
 			resultPanel.add(IoLabel);
 			resultPanel.add(IoTextField, "wrap");
-			
+
 			resultPanel.add(ImNLabel);
 			resultPanel.add(ImNTextField);
 			resultPanel.add(NnLabel);
@@ -168,19 +185,21 @@ public class UIDvigatel {
 			resultPanel.add(NoTextField);
 			resultPanel.add(X2Label);
 			resultPanel.add(X2TextField, "wrap");
-			
+
 			resultPanel.add(R1Label);
 			resultPanel.add(R1TextField);
 			resultPanel.add(R2Label);
 			resultPanel.add(R2TextField, "wrap");
-			
+
 			resultPanel.add(WnLabel);
 			resultPanel.add(WnTextField);
 			resultPanel.add(WoLabel);
 			resultPanel.add(WoTextField, "wrap");
 
 			resultPanel.add(IpnLabel);
-			resultPanel.add(IpnTextField, "wrap");
+			resultPanel.add(IpnTextField);
+			resultPanel.add(nameLabel);
+			resultPanel.add(nameTextField, "wrap");
 		}
 		return resultPanel;
 	}
@@ -199,6 +218,7 @@ public class UIDvigatel {
 		WnTextField.setEditable(editable);
 		WoTextField.setEditable(editable);
 		IpnTextField.setEditable(editable);
+		nameTextField.setEditable(editable);
 	}
 
 	public void fromDvigatel() {
@@ -215,6 +235,45 @@ public class UIDvigatel {
 		WnTextField.setText(dvigatel.getWn() + "");
 		WoTextField.setText(dvigatel.getWo() + "");
 		IpnTextField.setText(dvigatel.getIpn() + "");
+		nameTextField.setText(dvigatel.getName() + "");
+	}
+	
+	public void addTextChangeListeners() {
+	
+		DocumentListener docListener=new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				UIDvigatel.this.addToLibrary.setEnabled(true);
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				UIDvigatel.this.addToLibrary.setEnabled(true);
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				UIDvigatel.this.addToLibrary.setEnabled(true);
+				
+			}
+		};
+		pNTextField.getDocument().addDocumentListener(docListener);
+		U1nTextField.getDocument().addDocumentListener(docListener);
+		U2nTextField.getDocument().addDocumentListener(docListener);
+		IoTextField.getDocument().addDocumentListener(docListener);
+		ImNTextField.getDocument().addDocumentListener(docListener);
+		NnTextField.getDocument().addDocumentListener(docListener);
+		NoTextField.getDocument().addDocumentListener(docListener);
+		X2TextField.getDocument().addDocumentListener(docListener);
+		R1TextField.getDocument().addDocumentListener(docListener);
+		R2TextField.getDocument().addDocumentListener(docListener);
+		WnTextField.getDocument().addDocumentListener(docListener);
+		WoTextField.getDocument().addDocumentListener(docListener);
+		IpnTextField.getDocument().addDocumentListener(docListener);
+		nameTextField.getDocument().addDocumentListener(docListener);
 	}
 
 	public void toDvigatel() {
@@ -231,6 +290,7 @@ public class UIDvigatel {
 		dvigatel.setWn(Double.parseDouble(WnTextField.getText()));
 		dvigatel.setWo(Double.parseDouble(WoTextField.getText()));
 		dvigatel.setIpn(Double.parseDouble(IpnTextField.getText()));
+		dvigatel.setName(nameTextField.getText());
 	}
 
 	class SaveButtonActionListener implements ActionListener {
@@ -260,9 +320,26 @@ public class UIDvigatel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			editSaveButton.setEnabled(false);
-			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(UIDvigatel.this , editSaveButton);
+			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(UIDvigatel.this, editSaveButton);
 			libraryWindow.setVisible(true);
 			libraryWindow.setAlwaysOnTop(true);
+		}
+	}
+
+	class AddToLibraryActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				UIDvigatel.this.toDvigatel();
+				UIDvigatel.this.addToLibrary.setEnabled(false);
+				new ExcelService().addDvigatel(UIDvigatel.this.dvigatel);
+			} catch (InvalidFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
