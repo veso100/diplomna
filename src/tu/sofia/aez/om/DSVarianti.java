@@ -2,7 +2,7 @@ package tu.sofia.aez.om;
 
 import java.net.URL;
 
-public enum DSVarianti {
+public enum DSVarianti  {
 	VARIANT1("/resources/ds_var1.png"),
 	VARIANT2("/resources/ds_var2.png"),
 	VARIANT3("/resources/ds_var3.png"),

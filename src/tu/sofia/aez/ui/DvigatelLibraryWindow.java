@@ -2,6 +2,8 @@ package tu.sofia.aez.ui;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,16 +13,18 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
-import tu.sofia.aez.om.Dvigatel;
 
-public class DvigatelLibraryWindow extends JFrame implements Runnable {
+public class DvigatelLibraryWindow extends JFrame {
 
 	private static final long serialVersionUID = -5591244852799784837L;
 	
 	private JButton editSaveButton;
+	private UIDvigatel dvigatel;
+	private UIDvigatel dvigatelCharacteristics;
 	private JButton selectDvigatel=new JButton(); 
-	public DvigatelLibraryWindow(JButton button) {
+	public DvigatelLibraryWindow(UIDvigatel uiDvigatel, JButton button) {
 		setLayout(new MigLayout("center"));		
+		dvigatel=uiDvigatel;
 		editSaveButton=button;
 		setResizable(false);
 		setSize(UIConstants.LIBRARY_WIDTH, UIConstants.LIBRARY_HEIGHT);
@@ -41,17 +45,25 @@ public class DvigatelLibraryWindow extends JFrame implements Runnable {
 		listScroller.setPreferredSize(new Dimension(700, 200));
 		add(listScroller,"span,align center, wrap, gapy 20");
 		
-		UIDvigatel dvigatelCharacteristics=new UIDvigatel(new Dvigatel());
+		dvigatelCharacteristics=new UIDvigatel(dvigatel.getDvigatel());
 		add(dvigatelCharacteristics.getPanel(true,true),"span,align center, wrap, gapy 20");
 		
 		selectDvigatel.setText("Избери този двигател");
 		selectDvigatel.setFont(new Font("Arial",Font.BOLD, 16));
-		
+		selectDvigatel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				DvigatelLibraryWindow.this.dvigatelCharacteristics.toDvigatel();
+				dvigatel.setDvigatel(dvigatelCharacteristics.getDvigatel());
+				dvigatel.fromDvigatel();
+				dvigatel.refreshUI();
+				editSaveButton.setEnabled(true);
+				DvigatelLibraryWindow.this.setVisible(false);
+				
+			}
+		});
 		add(selectDvigatel,"span,align center, wrap, gapy 20");
-	}
-	@Override
-	public void run() {
-		setVisible(true);
 	}
 	
 	

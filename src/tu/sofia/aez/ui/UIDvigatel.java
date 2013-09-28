@@ -201,7 +201,7 @@ public class UIDvigatel {
 		IpnTextField.setEditable(editable);
 	}
 
-	private void fromDvigatel() {
+	public void fromDvigatel() {
 		pNTextField.setText(dvigatel.getpN() + "");
 		U1nTextField.setText(dvigatel.getU1n() + "");
 		U2nTextField.setText(dvigatel.getU2n() + "");
@@ -217,7 +217,7 @@ public class UIDvigatel {
 		IpnTextField.setText(dvigatel.getIpn() + "");
 	}
 
-	private void toDvigatel() {
+	public void toDvigatel() {
 		dvigatel.setpN(Double.parseDouble(pNTextField.getText()));
 		dvigatel.setU1n(Double.parseDouble(U1nTextField.getText()));
 		dvigatel.setU2n(Double.parseDouble(U2nTextField.getText()));
@@ -260,7 +260,7 @@ public class UIDvigatel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			editSaveButton.setEnabled(false);
-			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(editSaveButton);
+			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(UIDvigatel.this , editSaveButton);
 			libraryWindow.setVisible(true);
 			libraryWindow.setAlwaysOnTop(true);
 		}
@@ -272,6 +272,10 @@ public class UIDvigatel {
 
 	public void setDvigatel(Dvigatel dvigatel) {
 		this.dvigatel = dvigatel;
+	}
+
+	public void refreshUI() {
+		resultPanel.updateUI();
 	}
 
 }

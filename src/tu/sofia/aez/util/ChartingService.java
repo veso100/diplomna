@@ -11,6 +11,8 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.XYDataset;
 
+import tu.sofia.aez.ui.UIConstants;
+
 public class ChartingService {
 
 	public ChartingService() {
@@ -21,7 +23,7 @@ public class ChartingService {
 		final XYDataset dataset = data;
 		final JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		chartPanel.setPreferredSize(new java.awt.Dimension(UIConstants.RESULT_WIDTH-100, 300));
 		return chartPanel;
 	}
 

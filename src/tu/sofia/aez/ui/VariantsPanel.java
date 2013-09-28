@@ -25,7 +25,7 @@ public class VariantsPanel extends JPanel {
 	private static final long serialVersionUID = 8804859679762193880L;
 	private Variants variant;
 
-	private JLabel labelIzbereteVariant=new JLabel("Изберете вариант:");
+	private JLabel labelIzbereteVariant = new JLabel("Изберете вариант:");
 	private static final String DSvariant1Radio = "DS Variant 1";
 	private static final String DSvariant2Radio = "DS Variant 2";
 	private static final String DSvariant3Radio = "DS Variant 3";
@@ -50,8 +50,17 @@ public class VariantsPanel extends JPanel {
 
 	private ButtonGroup dSbuttonGroup = new ButtonGroup();
 
+	public RDSPOTVarianti getRDSPOTVariant() {
+		return rdspotVariantsChangedListener.getRdspotVariant();
+	}
+
+	public DSVarianti getDSVariant() {
+		return dsVariantsChangedListener.getDsVariant();
+	}
+
 	private DsVariantsChangedListener dsVariantsChangedListener = new DsVariantsChangedListener();
 	private RdspotVariantsChangedListener rdspotVariantsChangedListener = new RdspotVariantsChangedListener();
+
 	public VariantsPanel(Variants variant) {
 		super();
 		this.variant = variant;
@@ -71,13 +80,13 @@ public class VariantsPanel extends JPanel {
 		this.setBorder(new LineBorder(Color.blue));
 		setLayout(new MigLayout("center"));
 		labelIzbereteVariant.setFont(new Font("Arial", Font.PLAIN, 18));
-	    add(labelIzbereteVariant,"pos 30 10");
+		add(labelIzbereteVariant, "pos 30 10");
 		if (Variants.DS.equals(variant) || Variants.RDSS.equals(variant)) {
 
 			add(new JLabel(new ImageIcon(DSVarianti.VARIANT1.getResource())));
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT2.getResource())),"gapx 30");
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT3.getResource())),"gapx 30");
-			add(new JLabel(new ImageIcon(DSVarianti.VARIANT4.getResource())),"gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT2.getResource())), "gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT3.getResource())), "gapx 30");
+			add(new JLabel(new ImageIcon(DSVarianti.VARIANT4.getResource())), "gapx 30");
 			add(new JLabel(new ImageIcon(DSVarianti.VARIANT5.getResource())), "wrap, gapx 30");
 
 			dSvariant1Button.addActionListener(dsVariantsChangedListener);
@@ -123,17 +132,16 @@ public class VariantsPanel extends JPanel {
 
 			rdspotVariant3Button.addActionListener(rdspotVariantsChangedListener);
 			rdspotVariant3Button.setActionCommand(RDSPOTVariant3Radio);
-			
+
 			rdspotVariant1Button.setSelected(true);
-			
+
 			rdspotButtonGroup.add(rdspotVariant1Button);
 			rdspotButtonGroup.add(rdspotVariant2Button);
 			rdspotButtonGroup.add(rdspotVariant3Button);
-			
+
 			add(rdspotVariant1Button, "align center");
 			add(rdspotVariant2Button, "align center");
 			add(rdspotVariant3Button, "align center");
-			
 
 		}
 
@@ -141,6 +149,10 @@ public class VariantsPanel extends JPanel {
 
 	public class RdspotVariantsChangedListener implements ActionListener {
 		private RDSPOTVarianti rdspotVariant = RDSPOTVarianti.VARIANT1;
+
+		public RDSPOTVarianti getRdspotVariant() {
+			return rdspotVariant;
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -165,6 +177,10 @@ public class VariantsPanel extends JPanel {
 
 	public class DsVariantsChangedListener implements ActionListener {
 		private DSVarianti dsVariant = DSVarianti.VARIANT1;
+		
+		public DSVarianti getDsVariant() {
+			return dsVariant;
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
