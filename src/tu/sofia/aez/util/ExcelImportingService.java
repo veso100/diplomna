@@ -30,26 +30,35 @@ public class ExcelImportingService {
 			Row row = rows.next();
 			Iterator<Cell> cells = row.cellIterator();
 			int index = 0;
+			boolean first = true;
 			double[] values = new double[Dvigatel.VALUES_SIZE];
+			String name = "";
 			while (cells.hasNext()) {
 				Cell cell = cells.next();
-				if (Dvigatel.VALUES_SIZE < index - 1)
-					break;
-				try {
-					values[index] = cell.getNumericCellValue(); // Skip rows
-																// with not
-																// numeric
-																// values
-				} catch (Exception e) {
-					break;
+				if (first) {
+					name = cell.getStringCellValue();
+					first=false;
+				} else {
+					if (Dvigatel.VALUES_SIZE < index - 1)
+						break;
+					try {
+						values[index] = cell.getNumericCellValue(); // Skip rows
+																	// with not
+																	// numeric
+																	// values
+					} catch (Exception e) {
+						e.printStackTrace();
+						break;
+					}
+
+					index++;
 				}
-				index++;
 			}
-			if (Dvigatel.VALUES_SIZE != index - 1)
+			if (Dvigatel.VALUES_SIZE != index)
 				continue; // Skip rows with more or less values than needed for
 							// an engine
 
-			Dvigatel newDvigatel = new Dvigatel(values);
+			Dvigatel newDvigatel = new Dvigatel(values, name);
 			resultList.add(newDvigatel);
 		}
 		return resultList;
