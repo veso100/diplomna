@@ -11,8 +11,6 @@ import java.awt.print.PrinterJob;
 
 import javax.swing.JPanel;
 
-import tu.sofia.aez.ui.ResultsWindow;
-
 public class PrinterService implements Printable {
 	private JPanel panelToPrint;
 
@@ -72,12 +70,9 @@ public class PrinterService implements Printable {
 		double dScale = 1d;
 
 		if (original != null && toFit != null) {
-
 			double dScaleWidth = getScaleFactor(original.width, toFit.width);
 			double dScaleHeight = getScaleFactor(original.height, toFit.height);
-
 			dScale = Math.min(dScaleHeight, dScaleWidth);
-
 		}
 
 		return dScale;
@@ -88,15 +83,10 @@ public class PrinterService implements Printable {
 
 		double dScale = 1;
 		if (iMasterSize > iTargetSize) {
-
 			dScale = (double) iTargetSize / (double) iMasterSize;
-
 		} else {
-
 			dScale = (double) iTargetSize / (double) iMasterSize;
-
 		}
-
 		return dScale;
 
 	}
