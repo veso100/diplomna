@@ -62,7 +62,7 @@ public class DvigatelLibraryWindow extends JFrame {
 		add(listScroller, "span,align center, wrap, gapy 20");
 		dvigatelList.addListSelectionListener(new DvigatelListSelectionListener());
 
-		dvigatelCharacteristics = new UIDvigatel(dvigatel.getDvigatel());
+		dvigatelCharacteristics = new UIDvigatel(dvigatel.getDvigatel(),dvigatel.getVeriga());
 		add(dvigatelCharacteristics.getPanel(false, true), "span,align center, wrap, gapy 20");
 
 		selectDvigatel.setText("Избери този двигател");

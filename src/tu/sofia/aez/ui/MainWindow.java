@@ -20,7 +20,7 @@ import tu.sofia.aez.om.DS;
 import tu.sofia.aez.om.RDSPOT;
 import tu.sofia.aez.om.RDSS;
 import tu.sofia.aez.om.RejimNaSpirane;
-import tu.sofia.aez.ui.VariantsPanel.Variants;
+import tu.sofia.aez.om.Veriga;
 
 public class MainWindow {
 
@@ -149,26 +149,7 @@ public class MainWindow {
 	}
 
 	private void redrawVariantsPanel() {
-		if (rejimNaSpirane instanceof DS) {
-			if (Variants.RDSPOT.equals(variantsPanel.getVariant())) {
-				variantsPanel.setVariant(Variants.DS);
-				variantsPanel.refreshPanel();
-			} else
-				variantsPanel.setVariant(Variants.DS);
-		} else if (rejimNaSpirane instanceof RDSS) {
-
-			if (Variants.RDSPOT.equals(variantsPanel.getVariant())) {
-				variantsPanel.setVariant(Variants.RDSS);
-				variantsPanel.refreshPanel();
-			} else
-				variantsPanel.setVariant(Variants.RDSS);
-		} else if (rejimNaSpirane instanceof RDSPOT) {
-			if (!Variants.RDSPOT.equals(variantsPanel.getVariant())) {
-				variantsPanel.setVariant(Variants.RDSPOT);
-				variantsPanel.refreshPanel();
-			} else
-				variantsPanel.setVariant(Variants.RDSPOT);
-		}
+				//variantsPanel.refreshPanel();
 	}
 
 	private void switchToDSRejim() {

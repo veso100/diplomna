@@ -15,7 +15,6 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import tu.sofia.aez.om.DSVarianti;
-import tu.sofia.aez.om.RDSPOTVarianti;
 
 public class VariantsPanel extends JPanel {
 
@@ -38,28 +37,14 @@ public class VariantsPanel extends JPanel {
 	private JRadioButton dSvariant4Button = new JRadioButton();
 	private JRadioButton dSvariant5Button = new JRadioButton();
 
-	private JRadioButton rdspotVariant1Button = new JRadioButton();
-	private JRadioButton rdspotVariant2Button = new JRadioButton();
-	private JRadioButton rdspotVariant3Button = new JRadioButton();
-
-	private static final String RDSPOTVariant1Radio = "RDSPOT Variant 1";
-	private static final String RDSPOTVariant2Radio = "RDSPOT Variant 2";
-	private static final String RDSPOTVariant3Radio = "RDSPOT Variant 3";
-
-	private ButtonGroup rdspotButtonGroup = new ButtonGroup();
 
 	private ButtonGroup dSbuttonGroup = new ButtonGroup();
-
-	public RDSPOTVarianti getRDSPOTVariant() {
-		return rdspotVariantsChangedListener.getRdspotVariant();
-	}
 
 	public DSVarianti getDSVariant() {
 		return dsVariantsChangedListener.getDsVariant();
 	}
 
 	private DsVariantsChangedListener dsVariantsChangedListener = new DsVariantsChangedListener();
-	private RdspotVariantsChangedListener rdspotVariantsChangedListener = new RdspotVariantsChangedListener();
 
 	public VariantsPanel(Variants variant) {
 		super();
@@ -119,59 +104,6 @@ public class VariantsPanel extends JPanel {
 
 		}
 
-		if (Variants.RDSPOT.equals(variant)) {
-			add(new JLabel(new ImageIcon(RDSPOTVarianti.VARIANT1.getResource())));
-			add(new JLabel(new ImageIcon(RDSPOTVarianti.VARIANT2.getResource())));
-			add(new JLabel(new ImageIcon(RDSPOTVarianti.VARIANT3.getResource())), "wrap");
-
-			rdspotVariant1Button.addActionListener(rdspotVariantsChangedListener);
-			rdspotVariant1Button.setActionCommand(RDSPOTVariant1Radio);
-
-			rdspotVariant2Button.addActionListener(rdspotVariantsChangedListener);
-			rdspotVariant2Button.setActionCommand(RDSPOTVariant2Radio);
-
-			rdspotVariant3Button.addActionListener(rdspotVariantsChangedListener);
-			rdspotVariant3Button.setActionCommand(RDSPOTVariant3Radio);
-
-			rdspotVariant1Button.setSelected(true);
-
-			rdspotButtonGroup.add(rdspotVariant1Button);
-			rdspotButtonGroup.add(rdspotVariant2Button);
-			rdspotButtonGroup.add(rdspotVariant3Button);
-
-			add(rdspotVariant1Button, "align center");
-			add(rdspotVariant2Button, "align center");
-			add(rdspotVariant3Button, "align center");
-
-		}
-
-	}
-
-	public class RdspotVariantsChangedListener implements ActionListener {
-		private RDSPOTVarianti rdspotVariant = RDSPOTVarianti.VARIANT1;
-
-		public RDSPOTVarianti getRdspotVariant() {
-			return rdspotVariant;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getActionCommand() == RDSPOTVariant1Radio) {
-				if (!RDSPOTVarianti.VARIANT1.equals(rdspotVariant)) {
-					rdspotVariant = RDSPOTVarianti.VARIANT1;
-				}
-			} else if (e.getActionCommand() == RDSPOTVariant2Radio) {
-				if (!RDSPOTVarianti.VARIANT2.equals(rdspotVariant)) {
-					rdspotVariant = RDSPOTVarianti.VARIANT2;
-				}
-			} else {
-				if (!RDSPOTVarianti.VARIANT3.equals(rdspotVariant)) {
-					rdspotVariant = RDSPOTVarianti.VARIANT3;
-				}
-			}
-			System.out.println("VARIANT: " + rdspotVariant);
-
-		}
 
 	}
 

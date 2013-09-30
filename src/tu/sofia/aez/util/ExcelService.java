@@ -76,17 +76,12 @@ public class ExcelService {
 		row.createCell(2).setCellValue(dvg.getU1n());
 		row.createCell(3).setCellValue(dvg.getU2n());
 		row.createCell(4).setCellValue(dvg.getIo());
-		row.createCell(5).setCellValue(dvg.getImN());
-		row.createCell(6).setCellValue(dvg.getNn());
-		row.createCell(7).setCellValue(dvg.getNo());
-		row.createCell(8).setCellValue(dvg.getX2());
-		row.createCell(9).setCellValue(dvg.getR1());
-		row.createCell(10).setCellValue(dvg.getR2());
-		row.createCell(11).setCellValue(dvg.getWn());
-		row.createCell(12).setCellValue(dvg.getWo());
-		row.createCell(13).setCellValue(dvg.getIpn());
-		row.createCell(14).setCellValue(dvg.getRd());
-		row.createCell(15).setCellValue(dvg.getRsh());
+		row.createCell(5).setCellValue(dvg.getNn());
+		row.createCell(6).setCellValue(dvg.getNo());
+		row.createCell(7).setCellValue(dvg.getX2());
+		row.createCell(8).setCellValue(dvg.getR1());
+		row.createCell(9).setCellValue(dvg.getR2());
+		
 		FileOutputStream fileOut = new FileOutputStream(filename);
 	    wb.write(fileOut);
 	    fileOut.close();
