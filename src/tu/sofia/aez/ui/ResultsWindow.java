@@ -106,7 +106,7 @@ public class ResultsWindow extends JFrame {
 		printablePart.add(selectedDvigatelPanel, "span,align center, wrap, gapy 20");
 
 		ResultsCalculationService resultService = new ResultsCalculationService(uiDvigatel.getDvigatel(),
-				uiDvigatel.getVeriga(), variants.getDSVariant());
+				uiDvigatel.getVeriga(), variants.getDSVariant(),rejim.getType());
 
 		DataSetService dataSetService = new DataSetService(resultService);
 

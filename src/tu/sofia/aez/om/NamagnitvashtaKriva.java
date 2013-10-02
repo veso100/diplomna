@@ -3,11 +3,13 @@ package tu.sofia.aez.om;
 public class NamagnitvashtaKriva {
 	private double[] ImiuImin = { 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2 };
 	private double[] ImiuIMax = { 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2 };
-	private double[] E1Imin = { 0, 0.26, 0.52, 0.736, 0.895, 1, 1.07, 1.22, 1.163, 1.196, 1.223 };
-	private double[] E1Imax = { 0.26, 0.52, 0.736, 0.895, 1, 1.07, 1.22, 1.163, 1.196, 1.223 };
+	private double[] E1Imin = { 0, 0.26, 0.52, 0.736, 0.895, 1, 1.07, 1.122, 1.163, 1.196, 1.223 };
+	private double[] E1Imax = { 0.26, 0.52, 0.736, 0.895, 1, 1.07, 1.122, 1.163, 1.196, 1.223 };
 
 	public double XmiuId(int index) {
-		return (E1Imax[index] - E1Imin[index]) / (ImiuIMax[index] - ImiuImin[index]);
+		double num=E1Imax[index] - E1Imin[index];
+		double den=ImiuIMax[index] - ImiuImin[index];
+		return  num / den;
 	}
 
 	public double getImiuImin(int index) {
@@ -27,9 +29,9 @@ public class NamagnitvashtaKriva {
 	}
 
 	public double getE1(double Imiu) {
-
+		
 		if (Double.compare(Imiu, 2) >= 0) { // Max iMax
-			return 1.0356 + 0.2673 * Math.log10(Imiu);
+			return 1.0356 + 0.2673 * Math.log(Imiu);
 		}
 
 		for (int i = 0; i <= 9; i++) {
@@ -42,7 +44,7 @@ public class NamagnitvashtaKriva {
 	}
 
 	public double getXmiuPoI(double Imiu) {
-		return Imiu / getE1(Imiu);
+		return getE1(Imiu)/Imiu;
 
 	}
 

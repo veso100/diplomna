@@ -6,5 +6,8 @@ public class CondenzatornoSpirane implements RejimNaSpirane {
 	public String getName() {
 		return "Кондензаторно спиране";
 	}
-
+	@Override
+	public RejimEnum getType() {
+		return RejimEnum.COND;
+	}
 }

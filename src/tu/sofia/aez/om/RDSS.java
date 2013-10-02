@@ -6,5 +6,8 @@ public class RDSS implements RejimNaSpirane {
 	public String getName() {
 		return "Динамично спиране със самовъзбуждане";
 	}
-
+	@Override
+	public RejimEnum getType() {
+		return RejimEnum.RDSS;
+	}
 }

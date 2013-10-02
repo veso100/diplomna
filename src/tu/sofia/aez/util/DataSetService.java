@@ -1,10 +1,10 @@
 package tu.sofia.aez.util;
 
-import java.util.Arrays;
-
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import tu.sofia.aez.om.RejimEnum;
 
 public class DataSetService {
 
@@ -46,29 +46,50 @@ public class DataSetService {
 		double iMiuMax = resultService.getVeriga().getImiuMax();
 		double iMiuMin = resultService.getVeriga().getImiuMin();
 		double iMiuZvezdaMin = resultService.getImiuZvezdaMin();
-		double kp1 = Math.pow(iMiuMax / iMiuZvezdaMin, (double)1/(double)9);
-		double kp2 = (iMiuMax - iMiuMin) / 9;
-
-		double[] iMiu = new double[20];
-		iMiu[0] = iMiuMax;
-		iMiu[10] = iMiuMax;
-		double prevKp1 = iMiuMax;
-		double prevKp2 = iMiuMax;
-		for (int i = 1; i < 10; i++) {
-			prevKp1 = prevKp1 / kp1;
-			iMiu[i] = prevKp1;
-			prevKp2 = prevKp2 - kp2;
-			iMiu[i + 10] = prevKp2;
-		}
-		
+		double[] iMiu = new double[0];
 		final XYSeries seriesMiu = new XYSeries("Miu");
 		final XYSeries seriesE = new XYSeries("E1");
-		for (int i = 0; i < 20; i++) {
-			seriesMiu.add(resultService.getS(iMiu[i]), resultService.getMiu(iMiu[i]));
-			seriesE.add(resultService.getS(iMiu[i]), resultService.getE1(iMiu[i]));
+		
+		if (RejimEnum.RDSPOT.equals(resultService.getRejim())) {
+			double kp = (iMiuMax - iMiuMin) / (double) 49;
+			iMiu = new double[50];
+			double prevKp = iMiuMax;
+			iMiu[0] = iMiuMax;
+			for (int i = 1; i < 50; i++) {
+				prevKp = prevKp - kp;
+				iMiu[i] = prevKp;
+			}
+			resultService.setM4Const(1);
+			for (int i = 0; i < iMiu.length; i++) {
+				seriesMiu.add(resultService.getS(iMiu[i]), resultService.getMiu(iMiu[i]));
+				seriesE.add(resultService.getS(iMiu[i]), resultService.getE1(iMiu[i]));
+			}
 			
-			System.out.println(" N:"+i+"\ts:"+resultService.getS(iMiu[i])+"\tMiu:"+resultService.getMiu(iMiu[i])+"\tE1:"+resultService.getE1(iMiu[i]));
+			resultService.setM4Const(-1);
+			for (int i = 0; i < iMiu.length; i++) {
+				seriesMiu.add(resultService.getS(iMiu[i]), resultService.getMiu(iMiu[i]));
+				seriesE.add(resultService.getS(iMiu[i]), resultService.getE1(iMiu[i]));
+			}
+
+		} else {
+			if(RejimEnum.DS.equals(resultService.getRejim()))
+					resultService.setM4Const(-1);
+			double kp = (iMiuMax - iMiuMin) / (double) 99;
+			iMiu = new double[100];
+			double prevKp = iMiuMax;
+			iMiu[0] = iMiuMax;
+			for (int i = 1; i < 100; i++) {
+				prevKp = prevKp - kp;
+				iMiu[i] = prevKp;
+			}
+			for (int i = 0; i < iMiu.length; i++) {
+				seriesMiu.add(resultService.getS(iMiu[i]), resultService.getMiu(iMiu[i]));
+				seriesE.add(resultService.getS(iMiu[i]), resultService.getE1(iMiu[i]));
+			}
 		}
+
+	
+		
 
 		final XYSeriesCollection dataset = new XYSeriesCollection();
 		dataset.addSeries(seriesMiu);

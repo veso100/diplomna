@@ -7,4 +7,9 @@ public class DS implements RejimNaSpirane {
 		return "Динамично спиране";
 	}
 
+	@Override
+	public RejimEnum getType() {
+		return RejimEnum.DS;
+	}
+
 }

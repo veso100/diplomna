@@ -64,7 +64,8 @@ public class ChartingService {
 		// final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 		final XYSplineRenderer renderer = new XYSplineRenderer();
 		renderer.setSeriesLinesVisible(0, true);
-		renderer.setSeriesShapesVisible(0, true);
+		renderer.setSeriesShapesVisible(0, false);
+		renderer.setSeriesShapesVisible(1, false);
 		plot.setRenderer(renderer);
 
 		// change the auto tick unit selection to integer units only...
