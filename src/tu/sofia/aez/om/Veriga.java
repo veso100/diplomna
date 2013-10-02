@@ -23,6 +23,7 @@ public class Veriga {
 	public double getRd() {
 		return Rd;
 	}
+	
 
 	public void setRd(double rd) {
 		Rd = rd;
