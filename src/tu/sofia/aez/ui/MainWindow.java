@@ -15,12 +15,11 @@ import javax.swing.JRadioButton;
 import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
-import tu.sofia.aez.om.CondenzatornoSpirane;
 import tu.sofia.aez.om.DS;
 import tu.sofia.aez.om.RDSPOT;
 import tu.sofia.aez.om.RDSS;
+import tu.sofia.aez.om.RejimEnum;
 import tu.sofia.aez.om.RejimNaSpirane;
-import tu.sofia.aez.om.Veriga;
 
 public class MainWindow {
 
@@ -28,6 +27,7 @@ public class MainWindow {
 	private JPanel rejimPanel = new JPanel();
 	private VariantsPanel variantsPanel = new VariantsPanel();
 	private JLabel title = new JLabel("Технически унивеситет - София");
+	private JLabel kTitle = new JLabel("Катедра автоматизация на електрозадвижванията");
 	private JLabel labelIzborRejim = new JLabel("Изберете режим: ");
 	private JLabel subTitle = new JLabel("Изследване на режимите на динамично спиране на асинхронен двигател");
 	private JButton calculateButton = new JButton();
@@ -35,12 +35,10 @@ public class MainWindow {
 	public static final String DS_RADIO = "DS";
 	public static final String RDSS_RADIO = "RDSS";
 	public static final String RDSPOT_RADIO = "RDSPOT";
-	public static final String CONDENZATORNO_RADIO = "CONDENZATORNO";
 	private ButtonGroup rejimButtonGroup = new ButtonGroup();
 	private JRadioButton dsRadio = new JRadioButton("ДС");
 	private JRadioButton rdssRadio = new JRadioButton("РДСС");
 	private JRadioButton rdspotRadio = new JRadioButton("РДСПОТ");
-	private JRadioButton condenzatornoRadio = new JRadioButton("Кондензаторно");
 	private UIDvigatel dvigatelHolder = new UIDvigatel(calculateButton);
 	private RejimChangedListener rejimChangedListener = new RejimChangedListener();
 
@@ -67,17 +65,14 @@ public class MainWindow {
 		dsRadio.setActionCommand(DS_RADIO);
 		rdssRadio.setActionCommand(RDSS_RADIO);
 		rdspotRadio.setActionCommand(RDSPOT_RADIO);
-		condenzatornoRadio.setActionCommand(CONDENZATORNO_RADIO);
 
 		rejimButtonGroup.add(dsRadio);
 		rejimButtonGroup.add(rdssRadio);
 		rejimButtonGroup.add(rdspotRadio);
-		rejimButtonGroup.add(condenzatornoRadio);
 		dsRadio.addActionListener(rejimChangedListener);
 		dsRadio.setSelected(true);
 		rdssRadio.addActionListener(rejimChangedListener);
 		rdspotRadio.addActionListener(rejimChangedListener);
-		condenzatornoRadio.addActionListener(rejimChangedListener);
 
 		rejimPanel.setPreferredSize(new Dimension(UIConstants.PANEL_WIDTH, 30));
 		rejimPanel.setBorder(new LineBorder(Color.blue));
@@ -87,20 +82,24 @@ public class MainWindow {
 		rejimPanel.add(dsRadio);
 		rejimPanel.add(rdssRadio);
 		rejimPanel.add(rdspotRadio);
-		rejimPanel.add(condenzatornoRadio);
 
 		// Glaven prozorec - zaglavia
 		title.setFont(new Font("Arial", Font.BOLD, 28));
 		title.setForeground(Color.blue);
-		frame.add(title, "span,align center, wrap,gapy 20");
+		frame.add(title, "span,align center, wrap");
+		
+		kTitle.setFont(new Font("Arial", Font.BOLD, 24));
+		frame.add(kTitle, "span,align center, wrap,gapy 10");
+		
 		subTitle.setFont(new Font("Arial", Font.PLAIN, 24));
 
-		frame.add(subTitle, "span,align center, wrap,gapy 20");
+		frame.add(subTitle, "span,align center, wrap,gapy 10");
 		frame.add(rejimPanel, "span,align center, wrap, gapy 30");
 		// VARIANTI ZA REJIMA
 		frame.add(variantsPanel, "span,align center, wrap, gapy 20");
+		
 		frame.add(dvigatelHolder.getPanel(true), "span,align center, wrap, gapy 20");
-
+		dvigatelHolder.setRejim(RejimEnum.DS);
 		calculateButton.setText("Пресметни резултатите");
 		calculateButton.setFont(new Font("Arial", Font.BOLD, 18));
 		calculateButton.setPreferredSize(new Dimension(300, 30));
@@ -109,9 +108,8 @@ public class MainWindow {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dvigatelHolder.toDvigatel();
-				ResultsWindow libraryWindow = new ResultsWindow(MainWindow.this.dvigatelHolder,
+				new ResultsWindow(MainWindow.this.dvigatelHolder,
 						MainWindow.this.rejimNaSpirane, MainWindow.this.variantsPanel);
-				libraryWindow.setVisible(true);
 			}
 		});
 		frame.add(calculateButton, "span,align center, wrap, gapy 20");
@@ -125,22 +123,14 @@ public class MainWindow {
 			if (e.getActionCommand() == DS_RADIO) {
 				if (rejimNaSpirane == null || !(rejimNaSpirane instanceof DS)) {
 					switchToDSRejim();
-					System.out.println(DS_RADIO + " selected.");
 				}
 			} else if (e.getActionCommand() == RDSS_RADIO) {
 				if (rejimNaSpirane == null || !(rejimNaSpirane instanceof RDSS)) {
 					switchToRDSSRejim();
-					System.out.println(RDSS_RADIO + " selected.");
-				}
-			} else if (e.getActionCommand() == CONDENZATORNO_RADIO) {
-				if (rejimNaSpirane == null || !(rejimNaSpirane instanceof CondenzatornoSpirane)) {
-					switchToConednzatornoSpirane();
-					System.out.println(RDSS_RADIO + " selected.");
 				}
 			} else {
 				if (rejimNaSpirane == null || !(rejimNaSpirane instanceof RDSPOT)) {
 					switchToRDSPOTRejim();
-					System.out.println(RDSPOT_RADIO + " selected.");
 				}
 			}
 
@@ -148,28 +138,20 @@ public class MainWindow {
 
 	}
 
-	private void redrawVariantsPanel() {
-				//variantsPanel.refreshPanel();
-	}
 
 	private void switchToDSRejim() {
 		rejimNaSpirane = new DS();
-		redrawVariantsPanel();
-	}
-
-	private void switchToConednzatornoSpirane() {
-		rejimNaSpirane = new CondenzatornoSpirane();
-		redrawVariantsPanel();
+		dvigatelHolder.setRejim(RejimEnum.DS);
 	}
 
 	private void switchToRDSSRejim() {
 		rejimNaSpirane = new RDSS();
-		redrawVariantsPanel();
+		dvigatelHolder.setRejim(RejimEnum.RDSS);
 	}
 
 	private void switchToRDSPOTRejim() {
 		rejimNaSpirane = new RDSPOT();
-		redrawVariantsPanel();
+		dvigatelHolder.setRejim(RejimEnum.RDSPOT);
 	}
 
 	public Runnable getRunnable() {

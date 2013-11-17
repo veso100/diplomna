@@ -11,8 +11,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.XYDataset;
 
-import tu.sofia.aez.ui.UIConstants;
-
 public class ChartingService {
 
 	public ChartingService() {
@@ -23,7 +21,7 @@ public class ChartingService {
 		final XYDataset dataset = data;
 		final JFreeChart chart = createChart(dataset);
 		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(UIConstants.RESULT_WIDTH-100, 300));
+		chartPanel.setPreferredSize(new java.awt.Dimension(700, 300));
 		return chartPanel;
 	}
 
@@ -38,10 +36,10 @@ public class ChartingService {
 	private JFreeChart createChart(final XYDataset dataset) {
 
 		// create the chart...
-		final JFreeChart chart = ChartFactory.createXYLineChart("Result", // chart
+		final JFreeChart chart = ChartFactory.createXYLineChart("Графика", // chart
 																			// title
-				"X", // x axis label
-				"Y", // y axis label
+				"S", // x axis label
+				"E, μ", // y axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, true, // include legend
 				true, // tooltips

@@ -7,10 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -20,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import tu.sofia.aez.om.Dvigatel;
+import tu.sofia.aez.om.RejimEnum;
 import tu.sofia.aez.om.Veriga;
 import tu.sofia.aez.util.ExcelService;
 
@@ -44,15 +48,15 @@ public class UIDvigatel {
 	private JTextField R2TextField = new JTextField(INPUT_COLUMNS);
 	private JTextField nameTextField = new JTextField(INPUT_COLUMNS);
 
-	private JLabel pNLabel = new JLabel("Номинална мощност");
-	private JLabel U1nLabel = new JLabel("Номинално напрежение на статора");
-	private JLabel U2nLabel = new JLabel("Номинално напрежение на ротора");
-	private JLabel IoLabel = new JLabel("Фазен ток на празен ход");
-	private JLabel NnLabel = new JLabel("Номинална скорост");
-	private JLabel NoLabel = new JLabel("Скорост на празен ход");
-	private JLabel X2Label = new JLabel("Реактивно съпротивление на разсейване");
-	private JLabel R1Label = new JLabel("Активно съпротивление на статора");
-	private JLabel R2Label = new JLabel("Активно съпротивление на ротора");
+	private JLabel pNLabel = new JLabel("Номинална мощност (Pn)");
+	private JLabel U1nLabel = new JLabel("Номинално напрежение на статора (U1n)");
+	private JLabel U2nLabel = new JLabel("Номинално напрежение на ротора (U2n)");
+	private JLabel IoLabel = new JLabel("Фазен ток на празен ход (Io)");
+	private JLabel NnLabel = new JLabel("Номинална скорост (Nn)");
+	private JLabel NoLabel = new JLabel("Скорост на празен ход (No)");
+	private JLabel X2Label = new JLabel("Реактивно съпротивление на разсейване (X2)");
+	private JLabel R1Label = new JLabel("Активно съпротивление на статора (r1)");
+	private JLabel R2Label = new JLabel("Активно съпротивление на ротора (R2)");
 
 	private JLabel nameLabel = new JLabel("Име");
 
@@ -63,11 +67,12 @@ public class UIDvigatel {
 	private JTextField ImiuMinTextField = new JTextField(INPUT_COLUMNS);
 	private JTextField ImiuMaxTextField = new JTextField(INPUT_COLUMNS);
 
-	private JLabel IpnLabel = new JLabel("Ипн");
-	private JLabel RshLabel = new JLabel("Rш");
-	private JLabel RdLabel = new JLabel("Rд");
+	private JLabel IpnLabel = new JLabel("Iпн");
+	private JLabel RshLabel = new JLabel("Rш/r2");
+	private JLabel RdLabel = new JLabel("Rд/r2");
 	private JLabel ImiuMinLabel = new JLabel("Iμ min");
 	private JLabel ImiuMaxLabel = new JLabel("Iμ max");
+	private RejimEnum rejim;
 
 	private JButton selectFromLibrary = new JButton();
 	private JButton addToLibrary = new JButton();
@@ -112,6 +117,29 @@ public class UIDvigatel {
 		return getPanel(editable, false);
 	}
 
+	public void setRejim(RejimEnum rej) {
+
+		editSaveButton.setText(SAVE_TEXT);
+		editSaveButton.removeActionListener(editAction);
+		editSaveButton.removeActionListener(saveAction);
+		calculateButton.setEnabled(false);
+		editSaveButton.addActionListener(saveAction);
+		rejim = rej;
+		/*
+		 * if (RejimEnum.DS.equals(rej)) { ImiuMaxTextField.setEditable(false);
+		 * ImiuMaxTextField.setText(""); ImiuMinTextField.setEditable(false);
+		 * ImiuMinTextField.setText(""); rejim = RejimEnum.DS; } else if
+		 * (RejimEnum.RDSS.equals(rej)) { ImiuMaxTextField.setEditable(true);
+		 * ImiuMaxTextField.setText("" + 0d);
+		 * ImiuMinTextField.setEditable(false); ImiuMinTextField.setText("");
+		 * rejim = RejimEnum.RDSS; } else { ImiuMaxTextField.setEditable(true);
+		 * ImiuMaxTextField.setText("" + 0d);
+		 * ImiuMinTextField.setEditable(true); ImiuMinTextField.setText("" +
+		 * 0d); rejim = RejimEnum.RDSPOT; }
+		 */
+		setEditable(true);
+	}
+
 	public JPanel getPanel(boolean editable, boolean simple) {
 
 		resultPanel.setLayout(new MigLayout("center"));
@@ -123,9 +151,9 @@ public class UIDvigatel {
 
 		resultPanel.setBorder(new LineBorder(Color.blue));
 		if (!simple) {
-			JLabel title = new JLabel("Изберете двигател и параметри на веригата: ");
+			JLabel title = new JLabel("Изберете двигател и параметри: ");
 			title.setFont(new Font("Arial", Font.PLAIN, 18));
-			resultPanel.add(title, "span, wrap, gapx 20");
+			resultPanel.add(title, "span, wrap");
 		}
 		fromDvigatel();
 		setEditable(editable);
@@ -222,6 +250,7 @@ public class UIDvigatel {
 	}
 
 	private void setEditable(boolean editable) {
+
 		// Dvigatel
 		pNTextField.setEditable(editable);
 		U1nTextField.setEditable(editable);
@@ -237,11 +266,40 @@ public class UIDvigatel {
 		IpnTextField.setEditable(editable);
 		RshTextField.setEditable(editable);
 		RdTextField.setEditable(editable);
-		ImiuMinTextField.setEditable(editable);
-		ImiuMaxTextField.setEditable(editable);
+		if (editable) {
+			System.out.println("REJIM 3:" + rejim + " : " + this);
+			if (RejimEnum.DS.equals(rejim)) {
+				ImiuMaxTextField.setEditable(false);
+				ImiuMaxTextField.setText("");
+				ImiuMinTextField.setEditable(false);
+				ImiuMinTextField.setText("");
+				rejim = RejimEnum.DS;
+			} else if (RejimEnum.RDSS.equals(rejim)) {
+				ImiuMaxTextField.setEditable(true);
+				ImiuMaxTextField.setText("" + 0d);
+				ImiuMinTextField.setEditable(false);
+				ImiuMinTextField.setText("");
+				rejim = RejimEnum.RDSS;
+			} else {
+				ImiuMaxTextField.setEditable(true);
+				ImiuMaxTextField.setText("" + 0d);
+				ImiuMinTextField.setEditable(true);
+				ImiuMinTextField.setText("" + 0d);
+				rejim = RejimEnum.RDSPOT;
+			}
+		}else{
+			ImiuMaxTextField.setEditable(false);
+			ImiuMinTextField.setEditable(false);
+		}
+		
+		System.out.println("REJIM 2:" + rejim + " : " + this);
 	}
 
 	public void fromDvigatel() {
+		fromDvigatel(false);
+	}
+
+	public void fromDvigatel(boolean onlyDvigatel) {
 		pNTextField.setText(dvigatel.getpN() + "");
 		U1nTextField.setText(dvigatel.getU1n() + "");
 		U2nTextField.setText(dvigatel.getU2n() + "");
@@ -253,12 +311,13 @@ public class UIDvigatel {
 		R2TextField.setText(dvigatel.getR2() + "");
 		nameTextField.setText(dvigatel.getName() + "");
 
-		IpnTextField.setText(veriga.getIpN() + "");
-		RshTextField.setText(veriga.getRsh() + "");
-		RdTextField.setText(veriga.getRd() + "");
-		ImiuMaxTextField.setText(veriga.getImiuMax() + "");
-		ImiuMinTextField.setText(veriga.getImiuMin() + "");
-
+		if (!onlyDvigatel) {
+			IpnTextField.setText(veriga.getIpN() + "");
+			RshTextField.setText(veriga.getRsh() + "");
+			RdTextField.setText(veriga.getRd() + "");
+			ImiuMaxTextField.setText(veriga.getImiuMax() + "");
+			ImiuMinTextField.setText(veriga.getImiuMin() + "");
+		}
 	}
 
 	public void addTextChangeListeners() {
@@ -311,26 +370,80 @@ public class UIDvigatel {
 		veriga.setIpN(Double.parseDouble(IpnTextField.getText()));
 		veriga.setRsh(Double.parseDouble(RshTextField.getText()));
 		veriga.setRd(Double.parseDouble(RdTextField.getText()));
-		veriga.setImiuMax(Double.parseDouble(ImiuMaxTextField.getText()));
-		veriga.setImiuMin(Double.parseDouble(ImiuMinTextField.getText()));
+		if (!RejimEnum.DS.equals(rejim)) {
+			veriga.setImiuMax(Double.parseDouble(ImiuMaxTextField.getText()));
+			if (RejimEnum.RDSPOT.equals(rejim))
+				veriga.setImiuMin(Double.parseDouble(ImiuMinTextField.getText()));
+		}
 
 	}
 
 	class SaveButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			setEditable(false);
-			editSaveButton.setText(EDIT_TEXT);
-			calculateButton.setEnabled(true);
-			toDvigatel();
-			editSaveButton.removeActionListener(saveAction);
-			editSaveButton.addActionListener(editAction);
+			System.out.println("SAVE");
+			if (!UIDvigatel.this.validateInputFields()) {
+				setEditable(false);
+				editSaveButton.setText(EDIT_TEXT);
+				calculateButton.setEnabled(true);
+				toDvigatel();
+				editSaveButton.removeActionListener(saveAction);
+				editSaveButton.addActionListener(editAction);
+			}
 		}
+
+	}
+
+	private boolean isNotValidDouble(String input) {
+		try {
+			double result = Double.parseDouble(input);
+			if (result < 0)
+				return true;
+		} catch (NumberFormatException e) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean foundErrorsInField(JTextField input) {
+		if (isNotValidDouble(input.getText())) {
+			Border border = BorderFactory.createLineBorder(Color.red);
+			input.setBorder(border);
+			return true;
+		} else {
+			input.setBorder(UIManager.getBorder("TextField.border"));
+			return false;
+		}
+	}
+
+	private boolean validateInputFields() {
+		boolean foundErrors = false;
+
+		foundErrors = foundErrorsInField(pNTextField) || foundErrors;
+		foundErrors = foundErrorsInField(U1nTextField) || foundErrors;
+		foundErrors = foundErrorsInField(U2nTextField) || foundErrors;
+		foundErrors = foundErrorsInField(IoTextField) || foundErrors;
+		foundErrors = foundErrorsInField(NnTextField) || foundErrors;
+		foundErrors = foundErrorsInField(NoTextField) || foundErrors;
+		foundErrors = foundErrorsInField(X2TextField) || foundErrors;
+		foundErrors = foundErrorsInField(R1TextField) || foundErrors;
+		foundErrors = foundErrorsInField(R2TextField) || foundErrors;
+		foundErrors = foundErrorsInField(IpnTextField) || foundErrors;
+
+		foundErrors = foundErrorsInField(RshTextField) || foundErrors;
+		foundErrors = foundErrorsInField(RdTextField) || foundErrors;
+		if (RejimEnum.RDSPOT.equals(rejim))
+			foundErrors = foundErrorsInField(ImiuMinTextField) || foundErrors;
+		if (!RejimEnum.DS.equals(rejim))
+			foundErrors = foundErrorsInField(ImiuMaxTextField) || foundErrors;
+
+		return foundErrors;
 	}
 
 	class EditButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("EDIT");
 			setEditable(true);
 			editSaveButton.setText(SAVE_TEXT);
 			editSaveButton.removeActionListener(editAction);
@@ -342,10 +455,9 @@ public class UIDvigatel {
 	class SelectFromLibraryActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			editSaveButton.setEnabled(false);
-			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(UIDvigatel.this, editSaveButton);
+			DvigatelLibraryWindow libraryWindow = new DvigatelLibraryWindow(UIDvigatel.this);
 			libraryWindow.setVisible(true);
-			libraryWindow.setAlwaysOnTop(true);
+			libraryWindow.setAlwaysOnTop(false);
 		}
 	}
 
@@ -353,9 +465,18 @@ public class UIDvigatel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				UIDvigatel.this.toDvigatel();
-				UIDvigatel.this.addToLibrary.setEnabled(false);
-				new ExcelService().addDvigatel(UIDvigatel.this.dvigatel);
+				if (!validateInputFields()) {
+					if (nameTextField.getText().isEmpty()) {
+						Border border = BorderFactory.createLineBorder(Color.red);
+						nameTextField.setBorder(border);
+					} else {
+						nameTextField.setBorder(UIManager.getBorder("TextField.border"));
+						UIDvigatel.this.toDvigatel();
+						UIDvigatel.this.addToLibrary.setEnabled(false);
+						new ExcelService().addDvigatel(UIDvigatel.this.dvigatel);
+					}
+
+				}
 			} catch (InvalidFormatException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

@@ -4,7 +4,6 @@ import tu.sofia.aez.om.DSVarianti;
 import tu.sofia.aez.om.Dvigatel;
 import tu.sofia.aez.om.NamagnitvashtaKriva;
 import tu.sofia.aez.om.RejimEnum;
-import tu.sofia.aez.om.RejimNaSpirane;
 import tu.sofia.aez.om.Veriga;
 
 public class ResultsCalculationService {
@@ -19,7 +18,7 @@ public class ResultsCalculationService {
 		this.dvigatel = dvigatel;
 		this.veriga = veriga;
 		this.variant = variant;
-		this.rejim=rejim;
+		this.rejim = rejim;
 	}
 
 	public RejimEnum getRejim() {
@@ -100,20 +99,20 @@ public class ResultsCalculationService {
 		return getX2Prim() / getXmiuN();
 	}
 
-	private double getKov() {
+	public double getKov() {
 		return (1.224 * veriga.getRsh()) / ((0.35 * variant.getR1() * dvigatel.getR1()) + veriga.getRsh());
 	}
 
-	private double getKSuma() {
+	public double getKSuma() {
 		return getKe() * variant.getKc() * getKov();
 	}
 
 	public double getM1(double Imiu) {
-		return 1 + ( 2 * getX2PrimZvezda() / kriva.getXmiuPoI(Imiu));
+		return 1 + (2 * getX2PrimZvezda() / kriva.getXmiuPoI(Imiu));
 	}
 
 	public double getM2(double Imiu) {
-		return 1 -  ((Math.pow(variant.getKc(),2) * Math.pow(veriga.getIpN(),2)) / (Math.pow(Imiu,2)));  //CHECK!
+		return 1 - ((Math.pow(variant.getKc(), 2) * Math.pow(veriga.getIpN(), 2)) / (Math.pow(Imiu, 2))); // CHECK!
 	}
 
 	public double getM3(double Imiu) {
@@ -121,7 +120,7 @@ public class ResultsCalculationService {
 	}
 
 	public double getM4(double Imiu) {
-		return getM4Const() * (Math.pow((getKSuma2() - ( getM1(Imiu) * getM2(Imiu))), 0.5));
+		return getM4Const() * (Math.pow((getKSuma2() - (getM1(Imiu) * getM2(Imiu))), 0.5));
 	}
 
 	public double getF1(double Imiu) {
@@ -133,10 +132,9 @@ public class ResultsCalculationService {
 	}
 
 	public double getS(double Imiu) {
-		return getGlavnoRPrimZvezda() /
-				 ( Math.pow( 
-						 ((Math.pow(kriva.getXmiuPoI(Imiu), 2) / Math.pow(getF1(Imiu), 2)) - Math.pow(getX2PrimZvezda(), 2)
-						) , 0.5));
+		return getGlavnoRPrimZvezda()
+				/ (Math.pow(((Math.pow(kriva.getXmiuPoI(Imiu), 2) / Math.pow(getF1(Imiu), 2)) - Math.pow(
+						getX2PrimZvezda(), 2)), 0.5));
 	}
 
 	public double getMiu(double Imiu) {
@@ -152,7 +150,7 @@ public class ResultsCalculationService {
 		return 1.001 * variant.getKc() * veriga.getIpN();
 	}
 
-	private double getKSuma2() {
+	public double getKSuma2() {
 		return getKSuma() * getKSuma();
 	}
 
@@ -164,12 +162,12 @@ public class ResultsCalculationService {
 		return veriga.getRd() * dvigatel.getR2();
 	}
 
-	private double getGlavnoRPrimZvezda() {
+	public double getGlavnoRPrimZvezda() {
 		return (getKe2() / getXmiuN())
 				* (dvigatel.getR2() + getRd() + ((getDvigatel().getR1() * getRsh()) / (getDvigatel().getR1() + getRsh())));
 	}
-	
-	private double M4Const=1;
+
+	private double M4Const = 1;
 
 	public double getM4Const() {
 		return M4Const;
@@ -178,6 +176,26 @@ public class ResultsCalculationService {
 	public void setM4Const(double m4Const) {
 		M4Const = m4Const;
 	}
-	
+
+	public double getCalculatedIMiuMax() {
+		if (!RejimEnum.DS.equals(rejim))
+			return veriga.getImiuMax();
+		return 0.999 * variant.getKc() * veriga.getIpN();
+	}
+
+	public double getCalculatedIMiuMin() {
+		if (RejimEnum.RDSPOT.equals(rejim))
+			return veriga.getImiuMin();
+		if (RejimEnum.RDSS.equals(rejim)) {
+			return variant.getKc() * veriga.getIpN() + 0.1;
+		}
+		
+		
+		return variant.getKc()
+				* veriga.getIpN()
+				/ Math.pow((1 + ((1.3 * 1.3 * (1 + 2 * getX2PrimZvezda() / 1.3)) / (getGlavnoRPrimZvezda()
+						* getGlavnoRPrimZvezda() / 4 + getX2PrimZvezda() * getX2PrimZvezda()))), 0.5);
+
+	}
 
 }

@@ -28,17 +28,15 @@ public class DvigatelLibraryWindow extends JFrame {
 
 	private static final long serialVersionUID = -5591244852799784837L;
 	private JList<String> dvigatelList;
-	private JButton editSaveButton;
 	private UIDvigatel dvigatel;
 	private UIDvigatel dvigatelCharacteristics;
 	private JButton selectDvigatel = new JButton();
 	private List<Dvigatel> loadedDvigatels = new ArrayList<Dvigatel>();
 
-	public DvigatelLibraryWindow(UIDvigatel uiDvigatel, JButton button) {
+	public DvigatelLibraryWindow(UIDvigatel uiDvigatel) {
 		loadDvigatels();
 		setLayout(new MigLayout("center"));
 		dvigatel = uiDvigatel;
-		editSaveButton = button;
 		setResizable(false);
 		setSize(UIConstants.LIBRARY_WIDTH, UIConstants.LIBRARY_HEIGHT);
 		setTitle("Изберете двигател от библиотеката");
@@ -49,7 +47,8 @@ public class DvigatelLibraryWindow extends JFrame {
 
 		List<String> dvigatelNames = new ArrayList<String>();
 		for (Dvigatel dvg : loadedDvigatels) {
-			dvigatelNames.add(dvg.getName());
+			if(dvg.getName()!=null && !dvg.getName().isEmpty())
+				dvigatelNames.add(dvg.getName()+"  -  "+dvg.getpN()+"W, "+dvg.getU1n()+"V, "+dvg.getU2n()+"V, " + dvg.getNn()+"об/мин, "+dvg.getNo()+"об/мин");
 		}
 
 	    dvigatelList = new JList<String>(dvigatelNames.toArray(new String[dvigatelNames.size()]));
@@ -73,9 +72,8 @@ public class DvigatelLibraryWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				DvigatelLibraryWindow.this.dvigatelCharacteristics.toDvigatel();
 				dvigatel.setDvigatel(dvigatelCharacteristics.getDvigatel());
-				dvigatel.fromDvigatel();
+				dvigatel.fromDvigatel(true);
 				dvigatel.refreshUI();
-				editSaveButton.setEnabled(true);
 				DvigatelLibraryWindow.this.setVisible(false);
 
 			}

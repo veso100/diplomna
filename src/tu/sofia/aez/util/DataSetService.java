@@ -43,11 +43,10 @@ public class DataSetService {
 	}
 
 	public XYDataset createResultsDataset() {
-		double iMiuMax = resultService.getVeriga().getImiuMax();
-		double iMiuMin = resultService.getVeriga().getImiuMin();
-		double iMiuZvezdaMin = resultService.getImiuZvezdaMin();
+		double iMiuMax = resultService.getCalculatedIMiuMax();
+		double iMiuMin = resultService.getCalculatedIMiuMin();
 		double[] iMiu = new double[0];
-		final XYSeries seriesMiu = new XYSeries("Miu");
+		final XYSeries seriesMiu = new XYSeries("μ");
 		final XYSeries seriesE = new XYSeries("E1");
 		
 		if (RejimEnum.RDSPOT.equals(resultService.getRejim())) {
@@ -72,8 +71,8 @@ public class DataSetService {
 			}
 
 		} else {
-			if(RejimEnum.DS.equals(resultService.getRejim()))
-					resultService.setM4Const(-1);
+//			if(RejimEnum.DS.equals(resultService.getRejim()))
+//					resultService.setM4Const(-1);
 			double kp = (iMiuMax - iMiuMin) / (double) 99;
 			iMiu = new double[100];
 			double prevKp = iMiuMax;
